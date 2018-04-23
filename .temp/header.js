@@ -15,3 +15,7 @@ import weex from 'weex-vue-render';
 // weex.install(stream);
 weex.init(Vue);
 
+
+import App from '..\\src\\header.vue';
+App.el = '#root';
+new Vue(App);

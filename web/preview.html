@@ -28,23 +28,19 @@
       <div class="qrcode-box">
         <a class="qrcode" id="qrcode" target="_blank"></a>
         <p class="qrcode-tips">Use <a target="_blank" href="https://weex-project.io/playground.html">Weex playground app</a> to scan it.</p>
-        <div class="pages-box">
-
-        </div>
       </div>
     </main>
   </div>
   <script>
     (function(){
       const page = getUrlParam('page');
-      const entrys = getUrlParam('entrys');
       function getUrlParam (key) {
         var reg = new RegExp('[?|&]' + key + '=([^&]+)')
         var match = location.search.match(reg)
         return match && match[1]
       }
       function createQRCode (url) {
-        var $QR = document.querySelector('#qrcode')
+        var $QR = document.getElementById('qrcode')
         var QR = qrcode(0, 'L')
         url += '?_wx_tpl=' + url
         $QR.setAttribute('href', url)
@@ -53,22 +49,8 @@
         $QR.innerHTML = QR.createImgTag(6, 12)
       }
       if (page) {
-        var $preview = document.querySelector('#preview')
-        $preview.src = `/${page.replace('.js', '.html')}`;
-      }
-      if (entrys) {
-        var pageEntrys = decodeURI(entrys).replace('\\', '/').split('|');
-        var $pages = document.querySelector('.pages-box');
-        var contents = '';
-        pageEntrys.forEach(function(entry){
-          if (entry === getUrlParam('page').replace('.js', '')) {
-            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
-          }
-          else {
-            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item">${entry}</a>`
-          }
-        })
-        $pages.innerHTML = contents;
+        var $preview = document.getElementById('preview')
+        $preview.src = `/${page.replace('.js', '')}.html`;
       }
       var host = window.location.host;
       createQRCode(`http://${host}/dist/${page || 'index.js'}`)

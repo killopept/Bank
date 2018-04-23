@@ -19,45 +19,20 @@ const utils = require('./utils');
 const helper = require('./helper');
 
 /**
- * Modify the url that will open on the browser.
- * @param {Array} entry 
- */
-const postMessageToOpenPage =  (entry) => {
-  let entrys = Object.keys(entry);
-  let openpage = config.dev.openPage;
-  // exclude vendor entry.
-  entrys = entrys.filter(entry => entry !== 'vendor' );
-  if(entrys.indexOf('index') > -1) {
-    openpage += `?page=index.js`;
-  }
-  else {
-    openpage += `?page=${entrys[0]}.js`;
-  }
-  if(entrys.length > 1) {
-    openpage += `&entrys=${entrys.join('|')}`
-  }
-  return openpage;
-}
-
-const openPage = postMessageToOpenPage(commonConfig[0].entry);
-
-/**
  * Generate multiple entrys
  * @param {Array} entry 
  */
 const generateHtmlWebpackPlugin = (entry) => {
-  let entrys = Object.keys(entry);
-  // exclude vendor entry.
-  entrys = entrys.filter(entry => entry !== 'vendor' );
+  const entrys = Object.keys(entry);
   const htmlPlugin = entrys.map(name => {
+
     return new HtmlWebpackPlugin({
       filename: name + '.html',
       template: helper.rootNode(`web/index.html`),
       isDevServer: true,
       chunksSortMode: 'dependency',
       inject: true,
-      devScripts: config.dev.htmlOptions.devScripts,
-      chunks: ['vendor', name]
+      chunks: [name]
     })
   })
   return htmlPlugin;
@@ -142,7 +117,7 @@ const devWebpackConfig = webpackMerge(commonConfig[0], {
     : false,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
-    openPage: openPage,
+    openPage: config.dev.openPage,
     watchOptions: config.dev.watchOptions
   }
 });
